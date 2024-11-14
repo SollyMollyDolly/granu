@@ -12,9 +12,11 @@ Well maybe keep searching because this is probably the worst thing you can use, 
 
 If you want it anyway then open up your terminal and type:
 
-`git clone https://github.com/SollyMollyDolly/granu  
+```bash
+git clone https://github.com/SollyMollyDolly/granu  
 cd granu  
-gcc -std=c23 -o granu granu.c`
+gcc -std=c23 -o granu granu.c  
+```
 
 If you don't wanna use c23 then add #include `#include <stdbool.h>` to the file before compiling, maybe it works, idk.
 
