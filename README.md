@@ -18,7 +18,7 @@ cd granu
 gcc -std=c23 -o granu granu.c  
 ```
 
-If you don't wanna use c23 then add #include `#include <stdbool.h>` to the file before compiling, maybe it works, idk.
+If you don't wanna use c23 then add `#include <stdbool.h>` to the file before compiling, maybe it works, idk.
 
 
 
