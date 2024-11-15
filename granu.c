@@ -8,18 +8,20 @@
 
 int main(int argc, char **argv){
     char option;
-    bool bigMax = false;
     char separator = '\n';
-    size_t quantity;
+    bool bigMax = false;
     FILE *outputFile = stdout;
+    size_t quantity;
+    uint64_t upperBound = ~0;
 
-    while((option = getopt(argc, argv, "Mif:h?")) != -1){
+    while((option = getopt(argc, argv, "Mif:u:h?")) != -1){
         switch (option){
             case 'h':
                 printf("Options are:\n");
                 printf("\t-M:\t\tallows user to print up to %u numbers\n", ~0);
                 printf("\t-f [FILENAME]:\tprint numbers to [FILENAME]\n");
                 printf("\t-i:\t\tprint numbers in a single line spaced by a single character\n");
+                printf("\t-u:\t\tset a max integer value\n");
                 printf("\t-h:\t\tprint this message and exit\n");
                 return 0;
             case 'M':
@@ -30,16 +32,15 @@ int main(int argc, char **argv){
                 separator = ' ';
                 break;
             case 'f':
-                if (optarg){
-                    outputFile = fopen(optarg, "w");
-                    if (outputFile == NULL){
-                        printf("Couldn't create or open file '%s'\n", optarg);
-                        return 1;
-                    }
-                }else {
-                    printf("Error: File name not specified, please use %s -h", argv[0]);
+                outputFile = fopen(optarg, "w");
+                if (outputFile == NULL){
+                    printf("Couldn't create or open file '%s'\n", optarg);
                     return 1;
                 }
+                break;
+            case 'u':
+                sscanf(optarg, "%zu", &upperBound);
+                upperBound++;
                 break;
             case '?':
                 printf("Try %s -h\n", argv[0]);
@@ -87,7 +88,7 @@ int main(int argc, char **argv){
     char *bufferString;
     bufferString = (char*) malloc(25);
     for (uint32_t i = 0; i < quantity; i++){
-        int randomNumber = rand();
+        int16_t randomNumber = rand() % upperBound;
         sprintf(bufferString, "%d", randomNumber);
         fprintf(outputFile, bufferString);
         fputc(separator, outputFile);
