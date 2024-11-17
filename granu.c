@@ -12,7 +12,7 @@ int main(int argc, char **argv){
     bool bigMax = false;
     FILE *outputFile = stdout;
     size_t quantity;
-    uint64_t upperBound = ~0;
+    size_t upperBound = 0xFFFFFFFFFFFFFFFF;
 
     while((option = getopt(argc, argv, "Mif:u:h?")) != -1){
         switch (option){
@@ -88,7 +88,7 @@ int main(int argc, char **argv){
     char *bufferString;
     bufferString = (char*) malloc(25);
     for (uint32_t i = 0; i < quantity; i++){
-        int16_t randomNumber = rand() % upperBound;
+        int32_t randomNumber = rand() % upperBound;
         sprintf(bufferString, "%d", randomNumber);
         fprintf(outputFile, bufferString);
         fputc(separator, outputFile);
