@@ -85,12 +85,9 @@ int main(int argc, char **argv){
 
     srand(time(0));
 
-    char *bufferString;
-    bufferString = (char*) malloc(25);
     for (uint32_t i = 0; i < quantity; i++){
         int32_t randomNumber = rand() % upperBound;
-        sprintf(bufferString, "%d", randomNumber);
-        fprintf(outputFile, bufferString);
+        fprintf(outputFile, "%i", randomNumber);
         fputc(separator, outputFile);
     }
     if (separator != '\n'){
@@ -98,7 +95,6 @@ int main(int argc, char **argv){
     }
 
     fclose(outputFile);
-    free(bufferString);
 
     return 0;
 }
