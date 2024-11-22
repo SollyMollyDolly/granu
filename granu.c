@@ -5,10 +5,12 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+#include <limits.h>
 
-#define MAX_LIMIT   0xFFFFFFFFFFFFFFFF
-#define NormalizeToShort(a) a %= 0x10000;
-#define NormalizeToInt(a)   a %= 0x100000000;
+#define NormalizeToShort(a) a %= 0x1'00'00
+#define NormalizeToInt(a)   a %= 0x1'00'00'00'00
+#define ConvertToMB(a)      a / 100'000
+#define WARNING_TRIGGER     70'000
 
 int main(int argc, char **argv){
     char option;
@@ -16,14 +18,14 @@ int main(int argc, char **argv){
     bool bigMax = false;
     bool askQuantity = true;
     FILE *outputFile = stdout;
-    uint64_t upperBound = MAX_LIMIT;
+    uint64_t upperBound = ULONG_MAX;
     size_t quantity;
 
     while((option = getopt(argc, argv, "Miq:f:u:h?")) != -1){
         switch (option){
             case 'h':
                 printf("Options are:\n");
-                printf("\t-M:\t\tallows user to print up to %u numbers\n", ~0);
+                printf("\t-M:\t\tallows user to print up to %u numbers\n", UINT_MAX);
                 printf("\t-f [FILENAME]:\tprint numbers to [FILENAME]\n");
                 printf("\t-q [QUANTITY]:\tset amount of numbers to print\n");
                 printf("\t-i:\t\tprint numbers in a single line spaced by a single character\n");
@@ -67,18 +69,18 @@ int main(int argc, char **argv){
     }
     if (askQuantity){
         if (!bigMax) {
-            printf("Quantity of numbers to print (max %u): ", 0xFFFF);
+            printf("Quantity of numbers to print (max %u): ", USHRT_MAX);
             scanf("%zu", &quantity);
             NormalizeToShort(quantity);
         }else {
             printf("WARNING: Large limit enabled, be careful\n");
-            printf("Quantity of numbers to print (max %u): ", ~0);
+            printf("Quantity of numbers to print (max %u): ", UINT_MAX);
             scanf("%zu", &quantity);
             NormalizeToInt(quantity);
-            if (quantity > 0xFFFF){
+            if (quantity > WARNING_TRIGGER){
             warning:
                 char key;
-                printf("WARNING: This will print a file of ~%zuMB\n", quantity / 100000);
+                printf("WARNING: This will print a file of ~%zuMB\n", ConvertToMB(quantity));
                 printf("Are you REALLY sure you need %zu numbers? [Y/n] ", quantity);
                 getchar();
                 scanf("%c", &key);
